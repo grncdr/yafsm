@@ -1,6 +1,6 @@
 # yet-another-finite-state-machine
 
-Because there simply aren't enough packages on npm yet.
+Because there simply aren't enough packages on npm yet. [![Build Status](https://travis-ci.org/grncdr/yafsm.png?branch=master)](https://travis-ci.org/grncdr/yafsm)
 
 ## Synopsis
 
