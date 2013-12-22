@@ -11,15 +11,23 @@ var door = new FSM('closed', {
   'closed': ['open'],
   'open': ['closed'],
 })
+```
 
+State transitions use the `state` method:
+
+```javascript
 t.test("Moving between states", function (t) {
   t.plan(4)
   t.equal(door.state(), 'closed')
-  t.ok(!door.state('open'), "State change returns undefined")
+  t.ok(!door.state('open'), "successful state change returns undefined")
   t.equal('open', door.state())
   t.ok(door.state('broken'), "FSM.IllegalTransitionError")
 })
+```
 
+There is also a helper function for defining stateful methods:
+
+```javascript
 t.test("Defining state-aware methods", function (t) {
   door.open = FSM.method('open', {
     'closed': function () { return this.state('open') }
