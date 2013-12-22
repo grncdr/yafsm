@@ -1,12 +1,13 @@
 var EventEmitter = require('events').EventEmitter
 var inherits = require('inherits')
 
-module.exports = StateMachine
-module.exports.IllegalTransitionError = IllegalTransitionError;
-module.exports.UndefinedMethodError = UndefinedMethodError;
+module.exports = FSM
 
-inherits(StateMachine, EventEmitter)
-function StateMachine (initialState, transitions) {
+FSM.IllegalTransitionError = IllegalTransitionError;
+FSM.UndefinedMethodError   = UndefinedMethodError;
+
+inherits(FSM, EventEmitter)
+function FSM (initialState, transitions) {
   EventEmitter.call(this)
 
   var currentState = initialState;
@@ -30,7 +31,7 @@ function StateMachine (initialState, transitions) {
   }
 }
 
-StateMachine.method = function (name, implementations) {
+FSM.method = function (name, implementations) {
   dispatch.implementations = {};
   for (var key in implementations) {
     var states = key.split('|');
@@ -44,7 +45,7 @@ StateMachine.method = function (name, implementations) {
   function dispatch () {
     var implementation = dispatch.implementations[this.state()];
     if (typeof implementation !== 'function') {
-      var error = new StateMachine.UndefinedMethodError(name, this.state());
+      var error = new UndefinedMethodError(name, this.state());
       var lastArg = [].slice.call(arguments).pop();
       if (typeof lastArg === 'function') {
         lastArg.call(this, error);
@@ -65,7 +66,9 @@ inherits(UndefinedMethodError, Error);
 function UndefinedMethodError(method, state) {
   Error.captureStackTrace(this, UndefinedMethodError);
   this.name = 'Undefined Method';
-  this.message = "method '" + method + "' unavailable in state '" + state + "'";
+  this.message = "method '" + method + "' undefined in state '" + state + "'";
+  this.method = method
+  this.state = state
 }
 
 inherits(IllegalTransitionError, Error);
@@ -73,4 +76,6 @@ function IllegalTransitionError(from, to) {
   Error.captureStackTrace(this, IllegalTransitionError);
   this.name = 'Illegal Transition';
   this.message = "Transition from '" + from + "' to '" + to + "' not allowed";
+  this.from = from
+  this.to = to
 }

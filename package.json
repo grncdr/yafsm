@@ -4,7 +4,7 @@
   "description": "Yet-another-finite-state-machine",
   "main": "state-machine.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "covert test.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,8 @@
     "url": "https://github.com/grncdr/yafsm/issues"
   },
   "devDependencies": {
-    "tape": "~2.3.2"
+    "tape": "~2.3.2",
+    "covert": "~0.1.1"
   },
   "dependencies": {
     "inherits": "~2.0.1"
