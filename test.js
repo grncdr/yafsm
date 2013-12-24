@@ -1,18 +1,21 @@
+process.browser = true
+var fs = require('fs')
+var concat = require('concat-stream')
+var mdCodeBlocks = require('markdown-code-blocks')
 var test = require('tape')
+
 var FSM = require('./');
 
 test('README examples', function (t) {
-  require('./code-blocks')(__dirname + '/README.md', function (err, blocks) {
-    if (err) throw err
-    var code = blocks.map(function (block) {
-      return block.type == 'javascript' ? block.content : '';
-    }).join('\n')
-    evalScope(t, code)
-    function evalScope (t, code) {
-      eval(code)
-      t.end()
-    }
-  })
+  fs.createReadStream(__dirname + '/README.md')
+    .pipe(mdCodeBlocks('javascript'))
+    .pipe(concat(function (code) {
+      evalScope(t, code.toString('utf8'))
+      function evalScope (t, code) {
+        eval(code)
+        t.end()
+      }
+    }))
 })
 
 test('state machine returns error on illegal transition', function (t) {
